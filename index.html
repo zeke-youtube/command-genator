@@ -5,35 +5,160 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minecraft Command Generator</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="s.css" />
-</head>
-<body>
+  <style>
+    /* =========================
+       Global
+    ========================= */
+    * {
+      box-sizing: border-box;
+    }
 
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
+      background: #0f1117;
+      color: #e6e6eb;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       Layout
+    ========================= */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #a0a3b1;
+      margin-bottom: 32px;
+    }
+
+    /* =========================
+       Card
+    ========================= */
+    .card {
+      background: #161a23;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid #23283a;
+    }
+
+    /* =========================
+       Form
+    ========================= */
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      border: 1px solid #2c3148;
+      background: #0f1117;
+      color: #e6e6eb;
+      font-size: 0.95rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4f7cff;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 6px;
+    }
+
+    /* =========================
+       Buttons
+    ========================= */
+    button {
+      background: #4f7cff;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+
+    button:hover {
+      background: #3f6cff;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button.secondary {
+      background: #2c3148;
+      margin-top: 8px;
+    }
+
+    button.secondary:hover {
+      background: #3a4060;
+    }
+
+    /* =========================
+       Output
+    ========================= */
+    pre {
+      background: #0b0d13;
+      border: 1px solid #23283a;
+      border-radius: 10px;
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: #b6c7ff;
+    }
+
+    /* =========================
+       Footer
+    ========================= */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      color: #8b8fa3;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
   <div class="container">
     <h1>🧱 Minecraft Command Generator</h1>
     <p class="subtitle">
       Generate grid-aligned Minecraft commands (Mysticat-style) with one click.
     </p>
 
-    <!-- Generator Card -->
     <div class="card">
-      <label for="block">Block ID</label>
-      <input
-        id="block"
-        type="text"
-        placeholder="minecraft:smooth_quartz"
-        value="minecraft:smooth_quartz"
-      />
+      <label>Block ID</label>
+      <input id="block" type="text" value="minecraft:smooth_quartz" />
 
-      <label for="scale">Scale</label>
-      <input
-        id="scale"
-        type="number"
-        step="0.1"
-        min="0.1"
-        value="1"
-      />
+      <label>Scale</label>
+      <input id="scale" type="number" step="0.1" value="1" />
 
       <label>
         <input type="checkbox" id="underFeet" checked />
@@ -48,11 +173,9 @@
       <button onclick="generate()">Generate Command</button>
     </div>
 
-    <!-- Output Card -->
     <div class="card">
       <h3>Generated Command</h3>
-      <pre><code id="output">Click “Generate Command”</code></pre>
-
+      <pre id="output">Click “Generate Command”</pre>
       <button class="secondary" onclick="copyCommand()">Copy</button>
     </div>
 
@@ -61,7 +184,37 @@
     </footer>
   </div>
 
-  <!-- JS -->
-  <script src="s.js"></script>
+  <script>
+    function generate() {
+      const block = document.getElementById("block").value.trim();
+      const scale = document.getElementById("scale").value || 1;
+      const underFeet = document.getElementById("underFeet").checked;
+      const gridAlign = document.getElementById("gridAlign").checked;
+
+      if (!block) {
+        document.getElementById("output").textContent =
+          "Please enter a block ID.";
+        return;
+      }
+
+      let command = "/execute at @p";
+
+      if (gridAlign) command += " align xyz";
+      if (underFeet) command += " positioned ~ ~-1 ~";
+
+      command +=
+        ` run summon minecraft:block_display ~ ~ ~ ` +
+        `{block_state:{Name:"${block}"},transformation:{scale:[${scale}f,${scale}f,${scale}f]}}`;
+
+      document.getElementById("output").textContent = command;
+    }
+
+    function copyCommand() {
+      const text = document.getElementById("output").textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text);
+      alert("Command copied!");
+    }
+  </script>
 </body>
 </html>
