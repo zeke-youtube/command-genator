@@ -1,8 +1,67 @@
-<html>
-    <head>
-        <title>mc command maker</title>
-        <link rel="stylesheet" href="s.css">
-    </head>
-    <body>
-        <div class="div1"><p>1</p></div>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Command Generator</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="s.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧱 Minecraft Command Generator</h1>
+    <p class="subtitle">
+      Generate grid-aligned Minecraft commands (Mysticat-style) with one click.
+    </p>
+
+    <!-- Generator Card -->
+    <div class="card">
+      <label for="block">Block ID</label>
+      <input
+        id="block"
+        type="text"
+        placeholder="minecraft:smooth_quartz"
+        value="minecraft:smooth_quartz"
+      />
+
+      <label for="scale">Scale</label>
+      <input
+        id="scale"
+        type="number"
+        step="0.1"
+        min="0.1"
+        value="1"
+      />
+
+      <label>
+        <input type="checkbox" id="underFeet" checked />
+        Place under player feet
+      </label>
+
+      <label>
+        <input type="checkbox" id="gridAlign" checked />
+        Grid align (align xyz)
+      </label>
+
+      <button onclick="generate()">Generate Command</button>
+    </div>
+
+    <!-- Output Card -->
+    <div class="card">
+      <h3>Generated Command</h3>
+      <pre><code id="output">Click “Generate Command”</code></pre>
+
+      <button class="secondary" onclick="copyCommand()">Copy</button>
+    </div>
+
+    <footer>
+      Made by Zeke • Minecraft Java Edition • 1.19.4+
+    </footer>
+  </div>
+
+  <!-- JS -->
+  <script src="s.js"></script>
+</body>
+</html>
